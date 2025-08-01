@@ -16,7 +16,7 @@ interface JwtPayload {
   exp?: number;
 }
 
-export default async function authenticateJWT(
+export default async function authMiddleware(
   req: Request,
   res: Response,
   next: NextFunction
@@ -34,7 +34,9 @@ export default async function authenticateJWT(
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
     // Search the decoded "username" in the DB
-    const user = await User.findOne({ username: decoded.username });
+    const user = await User.findOne({ username: decoded.username }).select(
+      "-password"
+    );
 
     if (!user) {
       res.status(401).json({ message: "User not found" });

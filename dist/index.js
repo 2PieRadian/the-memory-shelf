@@ -14,57 +14,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("./config");
 const express_1 = __importDefault(require("express"));
-const User_1 = __importDefault(require("./model/User"));
 const db_1 = __importDefault(require("./db"));
-const Token_1 = __importDefault(require("./lib/Token"));
+const authController_1 = require("./controller/authController");
+const contentController_1 = __importDefault(require("./controller/contentController"));
+const authMiddleware_1 = __importDefault(require("./middleware/authMiddleware"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
+// Parse the body to JSON
 app.use(express_1.default.json());
+app.use((0, cookie_parser_1.default)());
 // SIGN-UP
-app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username, password } = req.body;
-    // Bad Username
-    if (username.length < 3 || username.length > 10) {
-        res.status(411).send({ message: "Error in inputs" });
-        return;
-    }
-    // Bad Password
-    if (password.length < 8 || password.length > 20) {
-        res.status(411).send({ message: "Error in inputs" });
-        return;
-    }
-    // User already exists
-    const userExistsAlready = yield User_1.default.findOne({ username });
-    if (userExistsAlready) {
-        res.status(403).send({ message: "User already exists with this username" });
-        return;
-    }
-    // Creating the user with {username, password}
-    try {
-        yield User_1.default.create({ username, password });
-        // Creating and Saving the JWT Token to the "Cookie"
-        const token = (0, Token_1.default)(username, res);
-        res.status(200).send({
-            message: `User created with {${username}, ${password}}. JWT: [${token}]`,
-        });
-    }
-    catch (err) {
-        if (err instanceof Error) {
-            console.log(err.message);
-            res
-                .status(500)
-                .send({ mesage: "An error occurred while creating the user" });
-        }
-        else {
-            console.log("An unknown error occurred");
-            res
-                .status(500)
-                .send({ mesage: "An error occurred while creating the user" });
-        }
-    }
-}));
+app.post("/api/v1/signup", authController_1.signup_post);
 // SIGN-IN
-app.post("/api/v1/signin", (req, res) => { });
-app.post("/api/v1/content", (req, res) => { });
+app.post("/api/v1/signin", authController_1.signin_post);
+app.post("/api/v1/content", authMiddleware_1.default, contentController_1.default);
 // Fetching all existing documents (no pagination)
 app.get("/api/v1/content", (req, res) => { });
 app.listen(3000, () => __awaiter(void 0, void 0, void 0, function* () {

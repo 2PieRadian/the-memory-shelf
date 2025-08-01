@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../model/User";
 import createToken from "../lib/Token";
+import bcrypt from "bcrypt";
 
 export async function signup_post(req: Request, res: Response) {
   const { username, password } = req.body;
@@ -35,19 +36,30 @@ export async function signup_post(req: Request, res: Response) {
       message: `User created with {${username}, ${password}}`,
     });
   } catch (err) {
-    if (err instanceof Error) {
-      console.log(err.message);
-
-      res
-        .status(500)
-        .send({ mesage: "An error occurred while creating the user" });
-    } else {
-      console.log("An unknown error occurred");
-      res
-        .status(500)
-        .send({ mesage: "An error occurred while creating the user" });
-    }
+    res
+      .status(500)
+      .send({ mesage: "An error occurred while creating the user" });
   }
 }
 
-export async function signin_post(req: Request, res: Response) {}
+export async function signin_post(req: Request, res: Response) {
+  const { username, password } = req.body;
+
+  const user = await User.findOne({ username });
+
+  // If user is not found
+  if (!user) {
+    return res.status(403).json({ message: "Sign up first" });
+  }
+
+  // Compare password
+  const passwordMatches = await bcrypt.compare(password, user.password);
+
+  if (!passwordMatches) {
+    return res.status(403).json({ message: "Incorrect credentials" });
+  }
+
+  createToken(username, res);
+
+  res.status(200).json({ message: "Logged in successfully" });
+}
