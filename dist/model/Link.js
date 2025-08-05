@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const LinkSchema = new mongoose_1.Schema({
     hash: String,
-    userId: { type: mongoose_1.default.Types.ObjectId, ref: "User" },
+    userId: { type: mongoose_1.default.Types.ObjectId, ref: "User", unique: true },
 });
 const Link = (0, mongoose_1.model)("link", LinkSchema);
 exports.default = Link;

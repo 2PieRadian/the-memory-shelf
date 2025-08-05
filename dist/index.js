@@ -16,7 +16,7 @@ require("./config");
 const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("./db"));
 const authController_1 = require("./controller/authController");
-const contentController_1 = __importDefault(require("./controller/contentController"));
+const contentController_1 = require("./controller/contentController");
 const authMiddleware_1 = __importDefault(require("./middleware/authMiddleware"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
@@ -27,9 +27,16 @@ app.use((0, cookie_parser_1.default)());
 app.post("/api/v1/signup", authController_1.signup_post);
 // SIGN-IN
 app.post("/api/v1/signin", authController_1.signin_post);
-app.post("/api/v1/content", authMiddleware_1.default, contentController_1.default);
-// Fetching all existing documents (no pagination)
-app.get("/api/v1/content", (req, res) => { });
+// Creating new content
+app.post("/api/v1/content", authMiddleware_1.default, contentController_1.create_content);
+// Fetching all existing content
+app.get("/api/v1/content", authMiddleware_1.default, contentController_1.get_content);
+// Create a sharable link
+app.post("/api/v1/share", authMiddleware_1.default, contentController_1.create_sharable_link);
+// Show users the content at the sharable link
+app.get("/share/:unique_string", authMiddleware_1.default, contentController_1.get_sharable_link_content);
+// Delete the sharable link
+app.delete("api/v1/share", authMiddleware_1.default, contentController_1.delete_sharable_link);
 app.listen(3000, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.default)();

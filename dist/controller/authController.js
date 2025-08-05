@@ -21,7 +21,7 @@ function signup_post(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { username, password } = req.body;
         // Bad Username
-        if (username.length < 3 || username.length > 10) {
+        if (username.length < 3 || username.length > 20) {
             res.status(411).send({ message: "Error in inputs" });
             return;
         }
@@ -39,7 +39,7 @@ function signup_post(req, res) {
         // Creating the user with {username, password}
         try {
             yield User_1.default.create({ username, password });
-            // Creating and Saving the JWT Token to the "Cookie"
+            // Creating and Saving the JWT Token to the cookie named 'token'
             (0, Token_1.default)(username, res);
             res.status(200).send({
                 message: `User created with {${username}, ${password}}`,

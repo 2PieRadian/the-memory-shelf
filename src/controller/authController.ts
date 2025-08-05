@@ -7,7 +7,7 @@ export async function signup_post(req: Request, res: Response) {
   const { username, password } = req.body;
 
   // Bad Username
-  if (username.length < 3 || username.length > 10) {
+  if (username.length < 3 || username.length > 20) {
     res.status(411).send({ message: "Error in inputs" });
     return;
   }
@@ -29,7 +29,7 @@ export async function signup_post(req: Request, res: Response) {
   try {
     await User.create({ username, password });
 
-    // Creating and Saving the JWT Token to the "Cookie"
+    // Creating and Saving the JWT Token to the cookie named 'token'
     createToken(username, res);
 
     res.status(200).send({

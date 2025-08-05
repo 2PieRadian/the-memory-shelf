@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from "mongoose";
 
 const LinkSchema = new Schema({
   hash: String,
-  userId: { type: mongoose.Types.ObjectId, ref: "User" },
+  userId: { type: mongoose.Types.ObjectId, ref: "User", unique: true },
 });
 
 const Link = model("link", LinkSchema);
