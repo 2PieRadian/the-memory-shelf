@@ -1,8 +1,13 @@
-import "./config";
+import dotenv from "dotenv";
+dotenv.config();
 
 import express from "express";
 import connectToDB from "./db";
-import { signin_post, signup_post } from "./controller/authController";
+import {
+  checkAuth,
+  signin_post,
+  signup_post,
+} from "./controller/authController";
 import {
   create_content,
   delete_sharable_link,
@@ -12,18 +17,27 @@ import {
 } from "./controller/contentController";
 import authMiddleware from "./middleware/authMiddleware";
 import cookieParser from "cookie-parser";
-import { get } from "mongoose";
+import cors from "cors";
 
 const app = express();
 
 // Parse the body to JSON
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
-// SIGN-UP
+// Check-auth
+app.get("/api/v1/checkauth", authMiddleware, checkAuth);
+
+// Sign-up
 app.post("/api/v1/signup", signup_post);
 
-// SIGN-IN
+// Sign-in
 app.post("/api/v1/signin", signin_post);
 
 // Creating new content

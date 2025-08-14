@@ -4,10 +4,10 @@ import createToken from "../lib/Token";
 import bcrypt from "bcrypt";
 
 export async function signup_post(req: Request, res: Response) {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  // Bad Username
-  if (username.length < 3 || username.length > 20) {
+  // Wrong email
+  if (email.length < 3) {
     res.status(411).send({ message: "Error in inputs" });
     return;
   }
@@ -18,22 +18,22 @@ export async function signup_post(req: Request, res: Response) {
     return;
   }
 
-  // User already exists
-  const userExistsAlready = await User.findOne({ username });
+  // Email already exists
+  const userExistsAlready = await User.findOne({ email });
   if (userExistsAlready) {
-    res.status(403).send({ message: "User already exists with this username" });
+    res.status(403).send({ message: "User already exists with this email" });
     return;
   }
 
-  // Creating the user with {username, password}
+  // Creating the user with {email, password}
   try {
-    await User.create({ username, password });
+    await User.create({ email, password });
 
     // Creating and Saving the JWT Token to the cookie named 'token'
-    createToken(username, res);
+    createToken(email, res);
 
     res.status(200).send({
-      message: `User created with {${username}, ${password}}`,
+      message: `User created with {${email}}`,
     });
   } catch (err) {
     res
@@ -43,9 +43,9 @@ export async function signup_post(req: Request, res: Response) {
 }
 
 export async function signin_post(req: Request, res: Response) {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ email });
 
   // If user is not found
   if (!user) {
@@ -59,7 +59,11 @@ export async function signin_post(req: Request, res: Response) {
     return res.status(403).json({ message: "Incorrect credentials" });
   }
 
-  createToken(username, res);
+  createToken(email, res);
 
   res.status(200).json({ message: "Logged in successfully" });
+}
+
+export async function checkAuth(req: Request, res: Response) {
+  return res.json(req.user);
 }

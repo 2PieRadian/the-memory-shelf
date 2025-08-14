@@ -62,7 +62,10 @@ export async function get_sharable_link_content(req: Request, res: Response) {
 
   const userId = link.userId;
 
-  const contents = await Content.find({ userId: userId });
+  const contents = await Content.find({ userId: userId }).populate(
+    "userId",
+    "email"
+  );
 
   return res.status(200).json({ contents });
 }

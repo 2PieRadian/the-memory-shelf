@@ -11,7 +11,7 @@ declare global {
 }
 
 interface JwtPayload {
-  username: string;
+  email: string;
   iat?: number;
   exp?: number;
 }
@@ -30,11 +30,11 @@ export default async function authMiddleware(
   }
 
   try {
-    // decoded = {username: 'some username'} / payload
+    // decoded = {email: 'some email'} / payload
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
-    // Search the decoded "username" in the DB
-    const user = await User.findOne({ username: decoded.username }).select(
+    // Search the decoded "email" in the DB
+    const user = await User.findOne({ email: decoded.email }).select(
       "-password"
     );
 

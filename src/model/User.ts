@@ -2,17 +2,27 @@ import mongoose, { Document } from "mongoose";
 import bcrypt from "bcrypt";
 
 export interface IUser extends Document {
-  username: string;
+  email: string;
   password: string;
+  username: string;
+  total_links_saved: number;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
-  username: {
+  email: {
     type: String,
     unique: true,
   },
   password: {
     type: String,
+  },
+  username: {
+    type: String,
+    default: "",
+  },
+  total_links_saved: {
+    type: Number,
+    default: 0,
   },
 });
 
@@ -26,5 +36,5 @@ userSchema.pre<IUser>("save", async function (next) {
   next();
 });
 
-const User = mongoose.model<IUser>("user", userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
 export default User;
