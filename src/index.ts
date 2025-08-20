@@ -14,6 +14,7 @@ import {
   get_content,
   create_sharable_link,
   get_sharable_link_content,
+  delete_content,
 } from "./controller/contentController";
 import authMiddleware from "./middleware/authMiddleware";
 import cookieParser from "cookie-parser";
@@ -45,6 +46,8 @@ app.post("/api/v1/content", authMiddleware, create_content);
 
 // Fetching all existing content
 app.get("/api/v1/content", authMiddleware, get_content);
+
+app.delete("/api/v1/content", authMiddleware, delete_content);
 
 // Create a sharable link
 app.post("/api/v1/share", authMiddleware, create_sharable_link);

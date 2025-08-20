@@ -23,6 +23,18 @@ export async function create_content(req: Request, res: Response) {
   }
 }
 
+export async function delete_content(req: Request, res: Response) {
+  const { contentId } = req.body;
+
+  try {
+    await Content.findByIdAndDelete(contentId);
+    res.json({ message: "Content deleted successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Couldn't delete" });
+  }
+}
+
 // Fetching all existing content of the user
 export async function get_content(req: Request, res: Response) {
   const userId = req.user?._id;
