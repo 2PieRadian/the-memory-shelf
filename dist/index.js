@@ -21,6 +21,7 @@ const contentController_1 = require("./controller/contentController");
 const authMiddleware_1 = __importDefault(require("./middleware/authMiddleware"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
+require("./lib/socket");
 const app = (0, express_1.default)();
 // Parse the body to JSON
 app.use(express_1.default.json());

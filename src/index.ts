@@ -19,6 +19,7 @@ import {
 import authMiddleware from "./middleware/authMiddleware";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import "./lib/socket";
 
 const app = express();
 
