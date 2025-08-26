@@ -22,6 +22,7 @@ const authMiddleware_1 = __importDefault(require("./middleware/authMiddleware"))
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 require("./lib/socket");
+const viberoomController_1 = require("./controller/viberoomController");
 const app = (0, express_1.default)();
 // Parse the body to JSON
 app.use(express_1.default.json());
@@ -36,6 +37,8 @@ app.get("/api/v1/checkauth", authMiddleware_1.default, authController_1.checkAut
 app.post("/api/v1/signup", authController_1.signup_post);
 // Sign-in
 app.post("/api/v1/signin", authController_1.signin_post);
+// Logout
+app.post("/api/v1/logout", authMiddleware_1.default, authController_1.logout_post);
 // Creating new content
 app.post("/api/v1/content", authMiddleware_1.default, contentController_1.create_content);
 // Fetching all existing content
@@ -46,7 +49,17 @@ app.post("/api/v1/share", authMiddleware_1.default, contentController_1.create_s
 // Show users the content at the sharable link
 app.get("/share/:unique_string", authMiddleware_1.default, contentController_1.get_sharable_link_content);
 // Delete the sharable link
-app.delete("api/v1/share", authMiddleware_1.default, contentController_1.delete_sharable_link);
+app.delete("/api/v1/share", authMiddleware_1.default, contentController_1.delete_sharable_link);
+// Get userId via email
+app.post("/api/v1/user", authMiddleware_1.default, viberoomController_1.get_user_id_via_email);
+// Get all the users in the room
+app.get("/api/v1/room/:roomId/users", authMiddleware_1.default, (req, res) => {
+    // TODO
+});
+// Create a room
+app.post("/api/v1/room", authMiddleware_1.default, (req, res) => {
+    // TODO
+});
 app.listen(3000, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.default)();

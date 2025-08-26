@@ -8,8 +8,8 @@ const ContentSchema = new mongoose_1.default.Schema({
     link: String,
     title: String,
     type: String,
-    tags: [{ type: mongoose_1.default.Types.ObjectId, ref: "Tag" }],
-    userId: { type: mongoose_1.default.Types.ObjectId, ref: "User", required: true },
+    tags: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Tag" }],
+    userId: { type: mongoose_1.default.Schema.Types.ObjectId, ref: "User", required: true },
 });
 const Content = mongoose_1.default.model("content", ContentSchema);
 exports.default = Content;

@@ -67,3 +67,13 @@ export async function signin_post(req: Request, res: Response) {
 export async function checkAuth(req: Request, res: Response) {
   return res.json(req.user);
 }
+
+export async function logout_post(req: Request, res: Response) {
+  try {
+    res.cookie("token", "", { maxAge: 0 });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    console.log("Error in logout controller: ", (err as Error).message);
+    return res.status(500).json({ message: "Error logging out" });
+  }
+}

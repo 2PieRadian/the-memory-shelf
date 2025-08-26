@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.signup_post = signup_post;
 exports.signin_post = signin_post;
 exports.checkAuth = checkAuth;
+exports.logout_post = logout_post;
 const User_1 = __importDefault(require("../model/User"));
 const Token_1 = __importDefault(require("../lib/Token"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -73,5 +74,17 @@ function signin_post(req, res) {
 function checkAuth(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         return res.json(req.user);
+    });
+}
+function logout_post(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            res.cookie("token", "", { maxAge: 0 });
+            res.status(200).json({ message: "Logged out successfully" });
+        }
+        catch (err) {
+            console.log("Error in logout controller: ", err.message);
+            return res.status(500).json({ message: "Error logging out" });
+        }
     });
 }

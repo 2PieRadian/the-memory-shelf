@@ -6,6 +6,8 @@ export interface IUser extends Document {
   password: string;
   username: string;
   total_links_saved: number;
+  rooms_created: string[];
+  joined_rooms: string[];
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -23,6 +25,14 @@ const userSchema = new mongoose.Schema<IUser>({
   total_links_saved: {
     type: Number,
     default: 0,
+  },
+  rooms_created: {
+    type: [String],
+    default: [],
+  },
+  joined_rooms: {
+    type: [String],
+    default: [],
   },
 });
 
