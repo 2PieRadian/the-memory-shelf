@@ -21,7 +21,12 @@ import authMiddleware from "./middleware/authMiddleware";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "./lib/socket";
-import { get_user_id_via_email } from "./controller/viberoomController";
+import {
+  create_room_post,
+  get_all_created_rooms_post,
+  get_user_id_via_email,
+  getMembersInARoom,
+} from "./controller/viberoomController";
 
 const app = express();
 
@@ -64,18 +69,18 @@ app.get("/share/:unique_string", authMiddleware, get_sharable_link_content);
 // Delete the sharable link
 app.delete("/api/v1/share", authMiddleware, delete_sharable_link);
 
-// Get userId via email
-app.post("/api/v1/user", authMiddleware, get_user_id_via_email);
-
-// Get all the users in the room
-app.get("/api/v1/room/:roomId/users", authMiddleware, (req, res) => {
-  // TODO
-});
-
+// ---- viberoom API's ----
 // Create a room
-app.post("/api/v1/room", authMiddleware, (req, res) => {
-  // TODO
-});
+app.post("/api/v1/create-room", authMiddleware, create_room_post);
+
+// Get all the rooms Created by the Current user
+app.post("/api/v1/rooms", authMiddleware, get_all_created_rooms_post);
+
+// TODO: Join a room
+app.post("/api/v1/join-room", authMiddleware, (req, res) => {});
+
+// TODO: Get all the users in the room
+app.get("/api/v1/room/:roomId/members", authMiddleware, getMembersInARoom);
 
 app.listen(3000, async () => {
   try {

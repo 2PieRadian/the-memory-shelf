@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, mongo } from "mongoose";
 import bcrypt from "bcrypt";
 
 export interface IUser extends Document {
@@ -6,8 +6,8 @@ export interface IUser extends Document {
   password: string;
   username: string;
   total_links_saved: number;
-  rooms_created: string[];
-  joined_rooms: string[];
+  rooms_created: mongoose.Types.ObjectId[];
+  joined_rooms: mongoose.Types.ObjectId[];
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -26,14 +26,12 @@ const userSchema = new mongoose.Schema<IUser>({
     type: Number,
     default: 0,
   },
-  rooms_created: {
-    type: [String],
-    default: [],
-  },
-  joined_rooms: {
-    type: [String],
-    default: [],
-  },
+  rooms_created: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Room", default: [] },
+  ],
+  joined_rooms: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Room", default: [] },
+  ],
 });
 
 userSchema.pre<IUser>("save", async function (next) {

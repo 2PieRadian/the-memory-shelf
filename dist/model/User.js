@@ -30,14 +30,12 @@ const userSchema = new mongoose_1.default.Schema({
         type: Number,
         default: 0,
     },
-    rooms_created: {
-        type: [String],
-        default: [],
-    },
-    joined_rooms: {
-        type: [String],
-        default: [],
-    },
+    rooms_created: [
+        { type: mongoose_1.default.Schema.Types.ObjectId, ref: "Room", default: [] },
+    ],
+    joined_rooms: [
+        { type: mongoose_1.default.Schema.Types.ObjectId, ref: "Room", default: [] },
+    ],
 });
 userSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {

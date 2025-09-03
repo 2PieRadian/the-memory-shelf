@@ -6,16 +6,20 @@ const RoomSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-
   roomId: {
     type: String,
     unique: true,
   },
-
   roomName: {
     type: String,
     default: "",
   },
+  members: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const Room = mongoose.model("Room", RoomSchema);

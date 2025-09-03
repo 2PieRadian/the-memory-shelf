@@ -18,6 +18,12 @@ const RoomSchema = new mongoose_1.default.Schema({
         type: String,
         default: "",
     },
+    members: [
+        {
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
 });
 const Room = mongoose_1.default.model("Room", RoomSchema);
 exports.default = Room;

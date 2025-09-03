@@ -50,16 +50,15 @@ app.post("/api/v1/share", authMiddleware_1.default, contentController_1.create_s
 app.get("/share/:unique_string", authMiddleware_1.default, contentController_1.get_sharable_link_content);
 // Delete the sharable link
 app.delete("/api/v1/share", authMiddleware_1.default, contentController_1.delete_sharable_link);
-// Get userId via email
-app.post("/api/v1/user", authMiddleware_1.default, viberoomController_1.get_user_id_via_email);
-// Get all the users in the room
-app.get("/api/v1/room/:roomId/users", authMiddleware_1.default, (req, res) => {
-    // TODO
-});
+// ---- viberoom API's ----
 // Create a room
-app.post("/api/v1/room", authMiddleware_1.default, (req, res) => {
-    // TODO
-});
+app.post("/api/v1/create-room", authMiddleware_1.default, viberoomController_1.create_room_post);
+// Get all the rooms Created by the Current user
+app.post("/api/v1/rooms", authMiddleware_1.default, viberoomController_1.get_all_created_rooms_post);
+// TODO: Join a room
+app.post("/api/v1/join-room", authMiddleware_1.default, (req, res) => { });
+// TODO: Get all the users in the room
+app.get("/api/v1/room/:roomId/members", authMiddleware_1.default, viberoomController_1.getMembersInARoom);
 app.listen(3000, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.default)();
